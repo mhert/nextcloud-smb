@@ -4,7 +4,8 @@
 ARG NEXTCLOUD_TAG=35.0.3-apache
 FROM nextcloud:${NEXTCLOUD_TAG}
 
-ARG SMBCLIENT_VERSION=1.2.0
+# PECL publishes this release as "1.2.0dev" with stability "stable".
+ARG SMBCLIENT_VERSION=1.2.0dev
 
 # Pattern of the official image's own extensions: build against the -dev package, then
 # keep only the shared libraries the extension links against.
@@ -12,7 +13,7 @@ RUN set -eux; \
     savedAptMark="$(apt-mark showmanual)"; \
     apt-get update; \
     apt-get install -y --no-install-recommends libsmbclient-dev; \
-    pecl install "smbclient-${SMBCLIENT_VERSION}"; \
+    pecl install "channel://pecl.php.net/smbclient-${SMBCLIENT_VERSION}"; \
     docker-php-ext-enable smbclient; \
     apt-mark auto '.*' > /dev/null; \
     apt-mark manual $savedAptMark; \
